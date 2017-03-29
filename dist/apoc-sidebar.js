@@ -31,6 +31,7 @@ var _aFunction = function(it){
   return it;
 };
 
+// optional / simple context binding
 var aFunction = _aFunction;
 var _ctx = function(fn, that, length){
   aFunction(fn);
@@ -69,6 +70,7 @@ var _fails = function(exec){
   }
 };
 
+// Thank's IE8 for his funny defineProperty
 var _descriptors = !_fails(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
@@ -84,6 +86,7 @@ var _ie8DomDefine = !_descriptors && !_fails(function(){
   return Object.defineProperty(_domCreate('div'), 'a', {get: function(){ return 7; }}).a != 7;
 });
 
+// 7.1.1 ToPrimitive(input [, PreferredType])
 var isObject$2 = _isObject;
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
 // and the second argument - flag - preferred type is a string
@@ -250,6 +253,7 @@ var _cof = function(it){
   return toString.call(it).slice(8, -1);
 };
 
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
 var cof = _cof;
 var _iobject = Object('z').propertyIsEnumerable(0) ? Object : function(it){
   return cof(it) == 'String' ? it.split('') : Object(it);
@@ -261,6 +265,7 @@ var _defined = function(it){
   return it;
 };
 
+// to indexed object, toObject with fallback for non-array-like ES3 strings
 var IObject$1 = _iobject;
 var defined = _defined;
 var _toIobject = function(it){
@@ -274,6 +279,7 @@ var _toInteger = function(it){
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
 
+// 7.1.15 ToLength
 var toInteger = _toInteger;
 var min       = Math.min;
 var _toLength = function(it){
@@ -288,6 +294,8 @@ var _toIndex = function(index, length){
   return index < 0 ? max(index + length, 0) : min$1(index, length);
 };
 
+// false -> Array#indexOf
+// true  -> Array#includes
 var toIObject$1 = _toIobject;
 var toLength  = _toLength;
 var toIndex   = _toIndex;
@@ -350,6 +358,7 @@ var _enumBugKeys = (
   'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
 ).split(',');
 
+// 19.1.2.14 / 15.2.3.14 Object.keys(O)
 var $keys       = _objectKeysInternal;
 var enumBugKeys = _enumBugKeys;
 
@@ -369,11 +378,13 @@ var _objectPie = {
 	f: f$2
 };
 
+// 7.1.13 ToObject(argument)
 var defined$1 = _defined;
 var _toObject = function(it){
   return Object(defined$1(it));
 };
 
+// 19.1.2.1 Object.assign(target, source, ...)
 var getKeys  = _objectKeys;
 var gOPS     = _objectGops;
 var pIE      = _objectPie;
@@ -406,6 +417,7 @@ var _objectAssign = !$assign || _fails(function(){
   } return T;
 } : $assign;
 
+// 19.1.3.1 Object.assign(target, source)
 var $export$2 = _export;
 
 $export$2($export$2.S + $export$2.F, 'Object', {assign: _objectAssign});
@@ -716,10 +728,24 @@ var ApocSidebar = function () {
     }
   }, {
     key: 'teardown',
-    value: function teardown() {}
-  }, {
-    key: 'on',
-    value: function on(type, cb) {}
+    value: function teardown() {
+      var _this4 = this;
+
+      if (this.isOpen()) {
+        this.close();
+      }
+
+      if (this.opts.type === 'push') {
+        document.body.removeEventListener('transitionend', this.handleTransitionendForOther);
+      } else if (this.opts.type === 'lid') {
+        this.siblings.forEach(function (el) {
+          el.removeEventListener('transitionend', _this4.handleTransitionendForOther);
+        });
+      }
+
+      this.el.removeEventListener('transitionend', this.handleTransitionendForWall);
+      this.el.removeEventListener('transitionend', this.handleTransitionendForSidebar);
+    }
   }, {
     key: 'width',
     get: function get() {

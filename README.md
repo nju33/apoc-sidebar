@@ -23,6 +23,12 @@ Then, download the latest version.
 <button id="trigger">...</button>
 
 <!--
+  `data-apoc-sidebar-sibling` is required only when type is `lid`.
+  It must be a sibling of an element to become a sidebar.
+-->
+<div data-apoc-sidebar-sibling></div>
+
+<!--
   Please specify `width` in CSS.
   Also, adding `display:none` does not show useless parts when displaying the page.
 -->
@@ -81,6 +87,11 @@ document.getElementById('trigger').addEventListener('click', () => {
     sidebar.open();
   }
 });
+
+setTimeout(() => {
+  // Delete events
+  sidebar.teardown();
+}, 999999)
 ```
 
 ### Examples
