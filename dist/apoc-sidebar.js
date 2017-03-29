@@ -603,7 +603,7 @@ var ApocSidebar = function () {
         position: 'fixed',
         zIndex: this.initZIndex,
         top: this.initYPosition
-      }, this.opts.side, this.initXPosition + 'px'));
+      }, this.opts.side, this.initXPosition));
 
       if (this.opts.type === 'door') {
         styles.push(_extends$1({
@@ -721,12 +721,17 @@ var ApocSidebar = function () {
     key: 'on',
     value: function on(type, cb) {}
   }, {
+    key: 'width',
+    get: function get() {
+      return getComputedStyle(this.el).width;
+    }
+  }, {
     key: 'initXPosition',
     get: function get() {
       if (/^(?:lid|door|waterfall|waterfallReverse)$/.test(this.opts.type)) {
         return 0;
       }
-      return -this.el.clientWidth;
+      return '-' + this.width;
     }
   }, {
     key: 'initYPosition',
@@ -759,10 +764,10 @@ var ApocSidebar = function () {
   }, {
     key: 'preslide',
     get: function get() {
-      var size = this.opts.side === 'left' ? this.el.clientWidth : -this.el.clientWidth;
+      var size = this.opts.side === 'left' ? this.width : '-' + this.width;
       return {
-        webkitTransform: 'translate3d(' + size + 'px, 0, 0)',
-        transform: 'translate3d(' + size + 'px, 0, 0)',
+        webkitTransform: 'translate3d(' + size + ', 0, 0)',
+        transform: 'translate3d(' + size + ', 0, 0)',
         zIndex: 9999
       };
     }
