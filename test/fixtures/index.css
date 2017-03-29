@@ -19,7 +19,25 @@ h1 {
   background: #f8f8f8;
 }
 
-#sidebar {
+.buttons {
+}
+
+.button {
+  display: inline-block;
+  margin: 1em auto;
+  padding: .3em .5em;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,.5);
+  background: rgba(0,0,0,.1);
+  transition: .2s;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: rgba(0,0,0,.3);
+}
+
+.sidebar {
   background: #222;
   text-align: center;
   color: #fff;

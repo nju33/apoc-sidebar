@@ -200,6 +200,48 @@ $export$1.U = 64;  // safe
 $export$1.R = 128; // real proto method for `library` 
 var _export = $export$1;
 
+var $export = _export;
+// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
+$export($export.S + $export.F * !_descriptors, 'Object', {defineProperty: _objectDp.f});
+
+var $Object = _core.Object;
+var defineProperty$4 = function defineProperty$4(it, key, desc){
+  return $Object.defineProperty(it, key, desc);
+};
+
+var defineProperty$2 = createCommonjsModule(function (module) {
+module.exports = { "default": defineProperty$4, __esModule: true };
+});
+
+var defineProperty$1 = createCommonjsModule(function (module, exports) {
+"use strict";
+
+exports.__esModule = true;
+
+var _defineProperty = defineProperty$2;
+
+var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (obj, key, value) {
+  if (key in obj) {
+    (0, _defineProperty2.default)(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+};
+});
+
+var _defineProperty = unwrapExports(defineProperty$1);
+
 var hasOwnProperty = {}.hasOwnProperty;
 var _has = function(it, key){
   return hasOwnProperty.call(it, key);
@@ -376,9 +418,9 @@ var _objectAssign = !$assign || _fails(function(){
 } : $assign;
 
 // 19.1.3.1 Object.assign(target, source)
-var $export = _export;
+var $export$2 = _export;
 
-$export($export.S + $export.F, 'Object', {assign: _objectAssign});
+$export$2($export$2.S + $export$2.F, 'Object', {assign: _objectAssign});
 
 var assign$2 = _core.Object.assign;
 
@@ -415,48 +457,6 @@ exports.default = _assign2.default || function (target) {
 });
 
 var _extends$1 = unwrapExports(_extends);
-
-var $export$2 = _export;
-// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
-$export$2($export$2.S + $export$2.F * !_descriptors, 'Object', {defineProperty: _objectDp.f});
-
-var $Object = _core.Object;
-var defineProperty$4 = function defineProperty$4(it, key, desc){
-  return $Object.defineProperty(it, key, desc);
-};
-
-var defineProperty$2 = createCommonjsModule(function (module) {
-module.exports = { "default": defineProperty$4, __esModule: true };
-});
-
-var defineProperty$1 = createCommonjsModule(function (module, exports) {
-"use strict";
-
-exports.__esModule = true;
-
-var _defineProperty = defineProperty$2;
-
-var _defineProperty2 = _interopRequireDefault(_defineProperty);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = function (obj, key, value) {
-  if (key in obj) {
-    (0, _defineProperty2.default)(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-};
-});
-
-var _defineProperty = unwrapExports(defineProperty$1);
 
 var classCallCheck = createCommonjsModule(function (module, exports) {
 "use strict";
@@ -506,10 +506,16 @@ var _createClass = unwrapExports(createClass);
 
 var defaultOpts = {
   type: 'slide',
-  type: 'water',
-  type: 'push',
-  type: 'lid',
-  side: 'left'
+  // type: 'water',
+  // type: 'push',
+  // type: 'lid',
+  // type: 'door',
+  // type: 'waterfall',
+  // type: 'waterfallReverse',
+  side: 'left',
+  // side: 'right'
+  transitionTimingFunction: 'cubic-bezier(0.455, 0.03, 0.515, 0.955)',
+  transitionDuration: '.2s'
 };
 
 var ApocSidebar = function () {
@@ -526,46 +532,65 @@ var ApocSidebar = function () {
     this.el = el;
     this.opts = _Object$assign({}, defaultOpts, opts);
 
-    this.handleTransitionend = this.createTransitionendHandler.bind(this);
+    this.handleTransitionendForWall = this.createTransitionendHandlerForWall.bind(this);
+    this.handleTransitionendForSidebar = this.createTransitionendHandlerForSidebar.bind(this);
+    this.handleTransitionendForOther = this.createTransitionendHandlerForOther.bind(this);
     this.handleClose = this.close.bind(this);
 
     this.opened = false;
   }
 
   _createClass(ApocSidebar, [{
-    key: 'createTransitionendHandler',
-    value: function createTransitionendHandler() {
+    key: 'createTransitionendHandlerForWall',
+    value: function createTransitionendHandlerForWall() {
+      _Object$assign(this.wall.style, {
+        webkitBackfaceVisibility: '',
+        backfaceVisibility: '',
+        willChange: ''
+      });
+    }
+  }, {
+    key: 'createTransitionendHandlerForOther',
+    value: function createTransitionendHandlerForOther() {
+      if (this.opts.type === 'lid' && this.isOpen()) {
+        _Object$assign(this.el.style, {
+          zIndex: 9999
+        });
+      }
+    }
+  }, {
+    key: 'createTransitionendHandlerForSidebar',
+    value: function createTransitionendHandlerForSidebar() {
       _Object$assign(this.el.style, {
         webkitBackfaceVisibility: '',
         backfaceVisibility: '',
         willChange: '',
         borderRadius: 0,
-        zIndex: this.isOpen() ? 9999 : -9999
+        zIndex: 9999
       });
     }
   }, {
     key: 'createWall',
     value: function createWall() {
       this.wall = document.createElement('div');
-      _Object$assign(this.wall.style, {
+      _Object$assign(this.wall.style, _extends$1({
         position: 'fixed',
         top: 0,
         left: 0,
         width: '100%',
         height: '100%',
         backgroundColor: 'rgba(0, 0, 0, .3)',
-        webkitTransition: '.2s',
-        transition: '.2s',
         opacity: 0,
         zIndex: -9998
-      });
+      }, this.transitionDecls));
       document.body.appendChild(this.wall);
       this.wall.addEventListener('click', this.handleClose);
+      this.wall.addEventListener('transitionend', this.handleTransitionendForWall);
     }
   }, {
     key: 'init',
     value: function init() {
-      var _Object$assign2;
+      var _this = this;
 
       this.createWall();
 
@@ -574,24 +599,39 @@ var ApocSidebar = function () {
           webkitTransition: '.2s',
           transition: '.2s'
         });
+        document.body.addEventListener('transitionend', this.handleTransitionendForOther);
       } else if (this.opts.type === 'lid') {
         this.siblings.forEach(function (el) {
-          _Object$assign(el.style, {
-            webkitTransition: '.2s',
-            transition: '.2s'
-          });
+          _Object$assign(el.style, _this.transitionDecls);
+          el.addEventListener('transitionend', _this.handleTransitionendForOther);
         });
       }
 
-      _Object$assign(this.el.style, (_Object$assign2 = {
+      var styles = [this.el.style];
+      styles.push(_defineProperty({
         display: '',
         height: '100%',
         position: 'fixed',
-        top: 0,
-        zIndex: this.initZIndex
-      }, _defineProperty(_Object$assign2, this.opts.side, -this.initPosition + 'px'), _defineProperty(_Object$assign2, 'webkitTransition', '.2s'), _defineProperty(_Object$assign2, 'transition', '.2s'), _Object$assign2));
+        zIndex: this.initZIndex,
+        top: this.initYPosition + 'px'
+      }, this.opts.side, this.initXPosition + 'px'));
 
-      this.el.addEventListener('transitionend', this.handleTransitionend);
+      if (this.opts.type === 'door') {
+        styles.push(_extends$1({
+          webkitTransformOrigin: this.opts.side + ' top',
+          transformOrigin: this.opts.side + ' top'
+        }, this.postdoor));
+      } else if (this.opts.type === 'waterfall' || this.opts.type === 'waterfallReverse') {
+        styles.push(this.postwaterfall);
+      }
+
+      _Object$assign.apply(null, styles);
+
+      this.el.addEventListener('transitionend', this.handleTransitionendForSidebar);
+
+      setTimeout(function () {
+        _Object$assign(_this.el.style, _this.transitionDecls);
+      }, 0);
     }
   }, {
     key: 'isOpen',
@@ -601,7 +641,7 @@ var ApocSidebar = function () {
   }, {
     key: 'isSlideType',
     value: function isSlideType() {
-      return (/slide|water/.test(this.opts.type)
+      return (/^(?:slide|water)$/.test(this.opts.type)
       );
     }
   }, {
@@ -610,9 +650,24 @@ var ApocSidebar = function () {
       return this.opts.type === 'water';
     }
   }, {
+    key: 'isDoorType',
+    value: function isDoorType() {
+      return this.opts.type === 'door';
+    }
+  }, {
+    key: 'isWaterfallType',
+    value: function isWaterfallType() {
+      return this.opts.type === 'waterfall';
+    }
+  }, {
+    key: 'isWaterfallReverseType',
+    value: function isWaterfallReverseType() {
+      return this.opts.type === 'waterfallReverse';
+    }
+  }, {
     key: 'open',
     value: function open() {
-      var _this = this;
+      var _this2 = this;
 
       _Object$assign(this.wall.style, {
         webkitBackfaceVisibility: 'hidden',
@@ -626,7 +681,7 @@ var ApocSidebar = function () {
         _Object$assign(document.body.style, _extends$1({}, this.preslide));
       } else if (this.opts.type === 'lid') {
         this.siblings.forEach(function (el) {
-          _Object$assign(el.style, _extends$1({}, _this.preslide));
+          _Object$assign(el.style, _extends$1({}, _this2.preslide));
         });
       }
 
@@ -634,14 +689,14 @@ var ApocSidebar = function () {
         webkitBackfaceVisibility: 'hidden',
         backfaceVisibility: 'hidden',
         willChange: 'transform, border-radius'
-      }, this.isSlideType() ? this.preslide : {}, this.isWaterType() ? this.prewater : {}));
+      }, this.isSlideType() ? this.preslide : {}, this.isWaterType() ? this.prewater : {}, this.isDoorType() ? this.predoor : {}, this.isWaterfallType() ? this.prewaterfall : {}, this.isWaterfallReverseType() ? this.prewaterfallReverse : {}));
 
       this.opened = true;
     }
   }, {
     key: 'close',
     value: function close() {
-      var _this2 = this;
+      var _this3 = this;
 
       _Object$assign(this.wall.style, {
         webkitBackfaceVisibility: 'hidden',
@@ -655,16 +710,17 @@ var ApocSidebar = function () {
         _Object$assign(document.body.style, _extends$1({}, this.postslide));
       } else if (this.opts.type === 'lid') {
         this.siblings.forEach(function (el) {
-          _Object$assign(el.style, _extends$1({}, _this2.postslide));
+          _Object$assign(el.style, _extends$1({}, _this3.postslide));
         });
       }
 
       _Object$assign(this.el.style, _extends$1({
         webkitBackfaceVisibility: 'hidden',
         backfaceVisibility: 'hidden',
-        willChange: 'transform, border-radius'
+        willChange: 'transform, border-radius',
+        zIndex: this.initZIndex
 
-      }, this.isSlideType() ? this.postslide : {}, this.isWaterType() ? this.postwater : {}));
+      }, this.isSlideType() ? this.postslide : {}, this.isWaterType() ? this.postwater : {}, this.isDoorType() ? this.postdoor : {}, this.isWaterfallType() ? this.postwaterfall : {}, this.isWaterfallReverseType() ? this.postwaterfall : {}));
 
       this.opened = false;
     }
@@ -675,12 +731,22 @@ var ApocSidebar = function () {
     key: 'on',
     value: function on(type, cb) {}
   }, {
-    key: 'initPosition',
+    key: 'initXPosition',
     get: function get() {
-      if (this.opts.type === 'lid') {
+      if (/^(?:lid|door|waterfall|waterfallReverse)$/.test(this.opts.type)) {
         return 0;
       }
-      return this.el.clientWidth;
+      return -this.el.clientWidth;
+    }
+  }, {
+    key: 'initYPosition',
+    get: function get() {
+      if (this.opts.type === 'waterfall') {
+        return -window.innerHeight;
+      } else if (this.opts.type === 'waterfallReverse') {
+        return window.innerHeight;
+      }
+      return 0;
     }
   }, {
     key: 'initZIndex',
@@ -691,11 +757,22 @@ var ApocSidebar = function () {
       return '';
     }
   }, {
-    key: 'preslide',
+    key: 'transitionDecls',
     get: function get() {
       return {
-        webkitTransform: 'translate3d(' + this.el.clientWidth + 'px, 0, 0)',
-        transform: 'translate3d(' + this.el.clientWidth + 'px, 0, 0)',
+        wabkitTransitionTimingFunction: this.opts.transitionTimingFunction,
+        transitionTimingFunction: this.opts.transitionTimingFunction,
+        webkitTransitionDuration: this.opts.transitionDuration,
+        transitionDuration: this.opts.transitionDuration
+      };
+    }
+  }, {
+    key: 'preslide',
+    get: function get() {
+      var size = this.opts.side === 'left' ? this.el.clientWidth : -this.el.clientWidth;
+      return {
+        webkitTransform: 'translate3d(' + size + 'px, 0, 0)',
+        transform: 'translate3d(' + size + 'px, 0, 0)',
         zIndex: 9999
       };
     }
@@ -710,17 +787,73 @@ var ApocSidebar = function () {
   }, {
     key: 'prewater',
     get: function get() {
+      if (this.opts.side === 'left') {
+        return {
+          borderTopRightRadius: '40% 80%',
+          borderBottomRightRadius: '40% 80%'
+        };
+      }
       return {
-        borderTopRightRadius: '40% 80%',
-        borderBottomRightRadius: '40% 80%'
+        borderTopLeftRadius: '40% 80%',
+        borderBottomLeftRadius: '40% 80%'
       };
     }
   }, {
     key: 'postwater',
     get: function get() {
+      if (this.opts.side === 'left') {
+        return {
+          borderTopRightRadius: '0 80%',
+          borderBottomRightRadius: '0 80%'
+        };
+      }
       return {
-        borderTopRightRadius: '0 80%',
-        borderBottomRightRadius: '0 80%'
+        borderTopLeftRadius: '0 80%',
+        borderBottomLeftRadius: '0 80%'
+      };
+    }
+  }, {
+    key: 'predoor',
+    get: function get() {
+      return {
+        webkitTransform: 'rotateY(0deg)',
+        transform: 'rotateY(0deg)'
+      };
+    }
+  }, {
+    key: 'postdoor',
+    get: function get() {
+      return {
+        webkitTransform: 'rotateY(90deg)',
+        transform: 'rotateY(90deg)'
+      };
+    }
+  }, {
+    key: 'prewaterfall',
+    get: function get() {
+      return {
+        borderBottomLeftRadius: '80% 40%',
+        borderBottomRightRadius: '80% 40%',
+        webkitTransform: 'translate3d(0, 100%, 0)',
+        transform: 'rotateY(0, 100%, 0)'
+      };
+    }
+  }, {
+    key: 'prewaterfallReverse',
+    get: function get() {
+      return {
+        borderTopLeftRadius: '80% 40%',
+        borderTopRightRadius: '80% 40%',
+        webkitTransform: 'translate3d(0, -100%, 0)',
+        transform: 'rotateY(0, 100%, 0)'
+      };
+    }
+  }, {
+    key: 'postwaterfall',
+    get: function get() {
+      return {
+        webkitTransform: 'translate3d(0, 0, 0)',
+        transform: 'rotateY(0, 0, 0)'
       };
     }
   }, {
