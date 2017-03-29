@@ -31,7 +31,6 @@ var _aFunction = function(it){
   return it;
 };
 
-// optional / simple context binding
 var aFunction = _aFunction;
 var _ctx = function(fn, that, length){
   aFunction(fn);
@@ -70,7 +69,6 @@ var _fails = function(exec){
   }
 };
 
-// Thank's IE8 for his funny defineProperty
 var _descriptors = !_fails(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
@@ -86,7 +84,6 @@ var _ie8DomDefine = !_descriptors && !_fails(function(){
   return Object.defineProperty(_domCreate('div'), 'a', {get: function(){ return 7; }}).a != 7;
 });
 
-// 7.1.1 ToPrimitive(input [, PreferredType])
 var isObject$2 = _isObject;
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
 // and the second argument - flag - preferred type is a string
@@ -253,7 +250,6 @@ var _cof = function(it){
   return toString.call(it).slice(8, -1);
 };
 
-// fallback for non-array-like ES3 and non-enumerable old V8 strings
 var cof = _cof;
 var _iobject = Object('z').propertyIsEnumerable(0) ? Object : function(it){
   return cof(it) == 'String' ? it.split('') : Object(it);
@@ -265,7 +261,6 @@ var _defined = function(it){
   return it;
 };
 
-// to indexed object, toObject with fallback for non-array-like ES3 strings
 var IObject$1 = _iobject;
 var defined = _defined;
 var _toIobject = function(it){
@@ -279,7 +274,6 @@ var _toInteger = function(it){
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
 
-// 7.1.15 ToLength
 var toInteger = _toInteger;
 var min       = Math.min;
 var _toLength = function(it){
@@ -294,8 +288,6 @@ var _toIndex = function(index, length){
   return index < 0 ? max(index + length, 0) : min$1(index, length);
 };
 
-// false -> Array#indexOf
-// true  -> Array#includes
 var toIObject$1 = _toIobject;
 var toLength  = _toLength;
 var toIndex   = _toIndex;
@@ -358,7 +350,6 @@ var _enumBugKeys = (
   'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
 ).split(',');
 
-// 19.1.2.14 / 15.2.3.14 Object.keys(O)
 var $keys       = _objectKeysInternal;
 var enumBugKeys = _enumBugKeys;
 
@@ -378,13 +369,11 @@ var _objectPie = {
 	f: f$2
 };
 
-// 7.1.13 ToObject(argument)
 var defined$1 = _defined;
 var _toObject = function(it){
   return Object(defined$1(it));
 };
 
-// 19.1.2.1 Object.assign(target, source, ...)
 var getKeys  = _objectKeys;
 var gOPS     = _objectGops;
 var pIE      = _objectPie;
@@ -417,7 +406,6 @@ var _objectAssign = !$assign || _fails(function(){
   } return T;
 } : $assign;
 
-// 19.1.3.1 Object.assign(target, source)
 var $export$2 = _export;
 
 $export$2($export$2.S + $export$2.F, 'Object', {assign: _objectAssign});
@@ -515,7 +503,8 @@ var defaultOpts = {
   side: 'left',
   // side: 'right'
   transitionTimingFunction: 'cubic-bezier(0.455, 0.03, 0.515, 0.955)',
-  transitionDuration: '.2s'
+  transitionDuration: '.2s',
+  wallBackgroundColor: 'rgba(0,0,0,.3)'
 };
 
 var ApocSidebar = function () {
@@ -579,7 +568,7 @@ var ApocSidebar = function () {
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, .3)',
+        backgroundColor: this.opts.wallBackgroundColor,
         opacity: 0,
         zIndex: -9998
       }, this.transitionDecls));
@@ -613,7 +602,7 @@ var ApocSidebar = function () {
         height: '100%',
         position: 'fixed',
         zIndex: this.initZIndex,
-        top: this.initYPosition + 'px'
+        top: this.initYPosition
       }, this.opts.side, this.initXPosition + 'px'));
 
       if (this.opts.type === 'door') {
@@ -689,6 +678,7 @@ var ApocSidebar = function () {
         webkitBackfaceVisibility: 'hidden',
         backfaceVisibility: 'hidden',
         willChange: 'transform, border-radius'
+
       }, this.isSlideType() ? this.preslide : {}, this.isWaterType() ? this.prewater : {}, this.isDoorType() ? this.predoor : {}, this.isWaterfallType() ? this.prewaterfall : {}, this.isWaterfallReverseType() ? this.prewaterfallReverse : {}));
 
       this.opened = true;
@@ -742,9 +732,9 @@ var ApocSidebar = function () {
     key: 'initYPosition',
     get: function get() {
       if (this.opts.type === 'waterfall') {
-        return -window.innerHeight;
+        return '-100%';
       } else if (this.opts.type === 'waterfallReverse') {
-        return window.innerHeight;
+        return '100%';
       }
       return 0;
     }
