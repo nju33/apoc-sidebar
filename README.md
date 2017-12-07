@@ -1,8 +1,10 @@
 # ApocSidebar
 
-[![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
-
-Sidebar not dependent on others.
+[![npm: apoc-sidebar](https://img.shields.io/npm/v/apoc-sidebar.svg)](https://www.npmjs.com/package/apoc-sidebar)
+[![CircleCI: nju33/apoc-sidebar](https://circleci.com/gh/nju33/apoc-sidebar.svg?style=svg)](https://circleci.com/gh/nju33/apoc-sidebar)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
+![license: mit](https://img.shields.io/packagist/l/doctrine/orm.svg)
 
 ![screenshot](https://github.com/nju33/apoc-sidebar/raw/master/images/screenshot.gif?raw=true)
 
