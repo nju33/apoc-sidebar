@@ -1,6 +1,6 @@
 {
   "name": "apoc-sidebar",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Sidebar without dependenceies",
   "main": "dist/apoc-sidebar.umd.js",
   "jsnext:main": "dist/apoc-sidebar.es.js",
