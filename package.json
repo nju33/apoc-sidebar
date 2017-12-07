@@ -31,33 +31,32 @@
     "access": "public"
   },
   "devDependencies": {
-    "autoprefixer": "^6.5.3",
-    "ava": "^0.17.0",
-    "babel-eslint": "6",
+    "autoprefixer": "^7.2.1",
+    "ava": "^0.24.0",
+    "babel-eslint": "8",
     "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-class-properties": "^6.19.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^0.0.9",
-    "babili": "^0.0.9",
-    "browser-sync": "^2.18.2",
-    "casual": "^1.5.11",
-    "cssnano": "^3.8.1",
+    "babel-preset-env": "^1.6.1",
+    "babili": "^0.1.4",
+    "browser-sync": "^2.18.13",
+    "casual": "^1.5.17",
+    "cssnano": "^3.10.0",
     "gulp": "^3.9.1",
-    "gulp-less": "^3.3.0",
-    "gulp-postcss": "^6.2.0",
-    "nightmare": "^2.8.1",
-    "postcss-easings": "^0.3.0",
-    "postcss-modules": "^0.5.2",
-    "rollup": "^0.36.4",
-    "rollup-plugin-babel": "^2.6.1",
-    "rollup-plugin-commonjs": "^7.0.0",
-    "rollup-plugin-json": "^2.0.2",
-    "rollup-plugin-node-resolve": "^2.0.0",
-    "rollup-plugin-replace": "^1.1.1",
+    "gulp-less": "^3.3.2",
+    "gulp-postcss": "^7.0.0",
+    "postcss-easings": "^1.0.1",
+    "postcss-modules": "^1.1.0",
+    "rollup": "^0.52.1",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-json": "^2.3.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-string": "^2.0.2",
-    "rollup-plugin-svelte": "^1.0.0",
-    "xo": "^0.17.1"
+    "rollup-plugin-svelte": "^3.2.0",
+    "xo": "^0.18.2"
   },
   "ava": {
     "files": [
@@ -89,5 +88,7 @@
       }
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "puppeteer": "^0.13.0"
+  }
 }

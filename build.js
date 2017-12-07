@@ -47,18 +47,19 @@ function bundle() {
     .then(bundle => {
       rollupConfig.cache = bundle;
 
-      ['iife', 'es', 'umd'].forEach(format => {
+      ['iife', 'es', 'umd'].forEach(async format => {
         switch (format) {
           case 'iife': {
             const opts = {
-              moduleName: MODULE_NAME,
+              name: MODULE_NAME,
               globals,
               format,
               banner: rollupConfig.banner
             };
             const destPath = './dist/apoc-sidebar.js';
             try {
-              fs.writeFileSync(destPath, bundle.generate(opts).code);
+              const result = await bundle.generate(opts)
+              fs.writeFileSync(destPath, result.code);
             } catch (err) {
               reject(err);
             }
@@ -66,13 +67,14 @@ function bundle() {
           }
           case 'umd': {
             const opts = {
-              moduleName: 'default',
+              name: 'default',
               globals,
               format
             };
             const destPath = './dist/apoc-sidebar.umd.js';
             try {
-              fs.writeFileSync(destPath, bundle.generate(opts).code);
+              const result = await bundle.generate(opts)
+              fs.writeFileSync(destPath, result.code);
             } catch (err) {
               reject(err);
             }
@@ -87,7 +89,8 @@ function bundle() {
             };
             const destPath = './dist/apoc-sidebar.es.js';
             try {
-              fs.writeFileSync(destPath, bundle.generate(opts).code);
+              const result = await bundle.generate(opts)
+              fs.writeFileSync(destPath, result.code);
             } catch (err) {
               reject(err);
             }
