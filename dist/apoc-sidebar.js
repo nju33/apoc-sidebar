@@ -537,6 +537,8 @@ var ApocSidebar = function () {
     value: function init() {
       var _this = this;
 
+      var isOpen = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
       this.createWall();
 
       if (this.opts.type === 'push') {
@@ -570,6 +572,11 @@ var ApocSidebar = function () {
       }
 
       _Object$assign.apply(null, styles);
+
+      if (isOpen) {
+        this.opened = true;
+        this.open();
+      }
 
       this.el.addEventListener('transitionend', this.handleTransitionendForSidebar);
 
@@ -651,20 +658,12 @@ var ApocSidebar = function () {
         opacity: 0
       });
 
-      console.log(999);
-      console.log(this);
-      console.log(this.siblings);
-      console.log(this.postslide);
       if (this.opts.type === 'push') {
         _Object$assign(document.body.style, _extends$1({}, this.postslide));
       } else if (this.opts.type === 'lid') {
         this.siblings.forEach(function (el) {
           _Object$assign(el.style, _extends$1({}, _this3.postslide));
         });
-        // console.log(999v)
-        // Object.assign(this.el.style, {
-        //   zIndex: -9998
-        // });
       }
 
       _Object$assign(this.el.style, _extends$1({
