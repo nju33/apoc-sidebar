@@ -41,8 +41,8 @@ module.exports = {
 };
 
 bundleAll()
-.then(() => {
-  first = false;
-  return;
-})
-.catch(err => console.log(err));
+  .then(() => {
+    first = false;
+    return;
+  })
+  .catch(err => console.log(err));

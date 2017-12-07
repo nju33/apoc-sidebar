@@ -14,22 +14,25 @@ const globals = {};
 
 exports.bundleAll = () => {
   return new Promise((resolve, reject) => {
-    gulp.src('src/styles/style.less')
+    gulp
+      .src('src/styles/style.less')
       .pipe(less())
-      .pipe(postcss([
-        autoprefixer({
-          browsers: '> 3%, last 2 versions'
-        }),
-        easings,
-        modules({
-          getJSON(cssFileName, json) {
-            // const baseName = path.basename(cssFileName) + '.json';
-            const baseName = 'class-name.json';
-            const jsonFileName = path.join(__dirname, 'lib', baseName);
-            fs.writeFileSync(jsonFileName, JSON.stringify(json));
-          }
-        })
-      ]))
+      .pipe(
+        postcss([
+          autoprefixer({
+            browsers: '> 3%, last 2 versions'
+          }),
+          easings,
+          modules({
+            getJSON(cssFileName, json) {
+              // const baseName = path.basename(cssFileName) + '.json';
+              const baseName = 'class-name.json';
+              const jsonFileName = path.join(__dirname, 'lib', baseName);
+              fs.writeFileSync(jsonFileName, JSON.stringify(json));
+            }
+          })
+        ])
+      )
       .pipe(gulp.dest('lib/'))
       .on('end', () => {
         bundle()
@@ -43,8 +46,7 @@ exports.bundle = bundle;
 
 function bundle() {
   return new Promise((resolve, reject) => {
-    rollup(rollupConfig)
-    .then(bundle => {
+    rollup(rollupConfig).then(bundle => {
       rollupConfig.cache = bundle;
 
       ['iife', 'es', 'umd'].forEach(async format => {
@@ -58,7 +60,7 @@ function bundle() {
             };
             const destPath = './dist/apoc-sidebar.js';
             try {
-              const result = await bundle.generate(opts)
+              const result = await bundle.generate(opts);
               fs.writeFileSync(destPath, result.code);
             } catch (err) {
               reject(err);
@@ -73,7 +75,7 @@ function bundle() {
             };
             const destPath = './dist/apoc-sidebar.umd.js';
             try {
-              const result = await bundle.generate(opts)
+              const result = await bundle.generate(opts);
               fs.writeFileSync(destPath, result.code);
             } catch (err) {
               reject(err);
@@ -89,7 +91,7 @@ function bundle() {
             };
             const destPath = './dist/apoc-sidebar.es.js';
             try {
-              const result = await bundle.generate(opts)
+              const result = await bundle.generate(opts);
               fs.writeFileSync(destPath, result.code);
             } catch (err) {
               reject(err);

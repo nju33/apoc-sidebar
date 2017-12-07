@@ -5,7 +5,7 @@ const wait = () => {
   return new Promise(r => {
     setTimeout(r, 1000);
   });
-}
+};
 
 describe('e2e', () => {
   let browser;
@@ -16,15 +16,15 @@ describe('e2e', () => {
     let flag = false;
 
     return new Promise(r => {
-      server = spawn('yarn', ['start'])
+      server = spawn('yarn', ['start']);
       server.stdout.on('data', data => {
         if (!flag && data.toString().includes('http://localhost')) {
-          flag = true
+          flag = true;
           r();
         }
-      })
-    })
-  }
+      });
+    });
+  };
 
   beforeAll(async () => {
     await startServer();
@@ -40,14 +40,16 @@ describe('e2e', () => {
   test('fixtures', async () => {
     await page.goto('http://localhost:3333');
 
-    (async () => {
-      await expect(age.$eval('#slide', el => el.style.transform))
-        .resolves.stringMatching(/300px, 0px, 0px/);
-      await page.click('.apoc-sidebar-wall:first-of-type')
+    async () => {
+      await expect(
+        age.$eval('#slide', el => el.style.transform)
+      ).resolves.stringMatching(/300px, 0px, 0px/);
+      await page.click('.apoc-sidebar-wall:first-of-type');
       await wait();
 
-      await expect(page.$eval('#slide', el => el.style.transform))
-        .resolves.stringMatching(/0px, 0px, 0px/);
-    })
+      await expect(
+        page.$eval('#slide', el => el.style.transform)
+      ).resolves.stringMatching(/0px, 0px, 0px/);
+    };
   });
-})
+});
