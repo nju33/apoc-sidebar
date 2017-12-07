@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>apoc-sidebar</title>
+  <link rel="stylesheet" href="./index.css">
+</head>
+
+<body style="margin: 0">
+
+  <div data-apoc-sidebar-sibling class="container">
+    <h1 style="text-align:center">ApocSidebar</h1>
+    <div class="buttons">
+      <div class="row">
+        <span class="button" id="slide-trigger">Slide</span>
+      </div>
+      <div class="row">
+        <span class="button" id="water-trigger">Water</span>
+      </div>
+      <div class="row">
+        <span class="button" id="push-trigger">Push</span>
+      </div>
+      <div class="row">
+        <span class="button" id="lid-trigger">Lid</span>
+      </div>
+      <div class="row">
+        <span class="button" id="door-trigger">Door</span>
+      </div>
+      <div class="row">
+        <span class="button" id="waterfall-trigger">Waterfall</span>
+      </div>
+      <div class="row">
+        <span class="button" id="waterfallReverse-trigger">Waterfall Reverse</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar" id="slide" style="width:300px;">
+    Slide
+  </div>
+  <div class="sidebar" id="water" style="width:300px;display:none">
+    Water
+  </div>
+  <div class="sidebar" id="push" style="width:300px;display:none">
+    Push
+  </div>
+  <div class="sidebar" id="lid" style="width:300px;display:none">
+    Lid
+  </div>
+  <div class="sidebar" id="door" style="width:300px;display:none">
+    Door
+  </div>
+  <div class="sidebar" id="waterfall" style="width:300px;display:none">
+    Waterfall
+  </div>
+  <div class="sidebar" id="waterfallReverse" style="width:300px;display:none">
+    Waterfall Reverse
+  </div>
+
+  <script src="./scripts/apoc-sidebar.js"></script>
+  <script src="./index.js"></script>
+</body>
+
+</html>
