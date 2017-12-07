@@ -1,7 +1,7 @@
 {
   "name": "apoc-sidebar",
   "version": "0.0.1",
-  "description": "Sidebar not dependent on others",
+  "description": "Sidebar without dependenceies",
   "main": "dist/apoc-sidebar.umd.js",
   "jsnext:main": "dist/apoc-sidebar.es.js",
   "scripts": {
@@ -47,6 +47,7 @@
     "gulp-less": "^3.3.2",
     "gulp-postcss": "^7.0.0",
     "jest": "^21.2.1",
+    "jsdom": "^11.5.1",
     "postcss-easings": "^1.0.1",
     "postcss-modules": "^1.1.0",
     "regenerator-runtime": "^0.11.0",

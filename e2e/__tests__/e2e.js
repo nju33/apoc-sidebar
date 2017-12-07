@@ -39,7 +39,6 @@ describe('e2e', () => {
 
   test('fixtures', async () => {
     await page.goto('http://localhost:3333');
-    await page.screenshot({path: 'example.png'});
 
     (async () => {
       await expect(age.$eval('#slide', el => el.style.transform))
