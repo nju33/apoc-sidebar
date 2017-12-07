@@ -6,11 +6,10 @@
   "jsnext:main": "dist/apoc-sidebar.es.js",
   "scripts": {
     "start": "node dev-server.js",
-    "prepublish": "yarn prod",
+    "prepare": "yarn prod",
     "preprod": "mkdir -p dist; NODE_ENV='production' node prod.js",
     "prod": "babili dist/apoc-sidebar.js --no-comments --minified -o dist/apoc-sidebar.min.js",
-    "_test": "xo && ava",
-    "test": "xo"
+    "test": "jest"
   },
   "repository": "nju33/apoc-sidebar",
   "keywords": [
@@ -32,8 +31,9 @@
   },
   "devDependencies": {
     "autoprefixer": "^7.2.1",
-    "ava": "^0.24.0",
+    "babel-core": "^6.26.0",
     "babel-eslint": "8",
+    "babel-jest": "^21.2.0",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -46,8 +46,10 @@
     "gulp": "^3.9.1",
     "gulp-less": "^3.3.2",
     "gulp-postcss": "^7.0.0",
+    "jest": "^21.2.1",
     "postcss-easings": "^1.0.1",
     "postcss-modules": "^1.1.0",
+    "regenerator-runtime": "^0.11.0",
     "rollup": "^0.52.1",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.2.6",
@@ -55,38 +57,12 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-string": "^2.0.2",
-    "rollup-plugin-svelte": "^3.2.0",
-    "xo": "^0.18.2"
+    "rollup-plugin-svelte": "^3.2.0"
   },
-  "ava": {
-    "files": [
-      "test/specs/*.js"
-    ]
-  },
-  "xo": {
-    "env": [
-      "node",
-      "browser"
-    ],
-    "files": [
-      "example/**/*.js",
-      "src/**/*.js"
-    ],
-    "esnext": true,
-    "space": 2,
-    "ignores": [
-      "es/**"
-    ],
-    "parser": "babel-eslint",
-    "overrides": [
-      {
-        "files": "test/fixtures/*js",
-        "esnext": false,
-        "globals": [
-          "apoc-sidebar"
-        ]
-      }
-    ]
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
   },
   "dependencies": {
     "puppeteer": "^0.13.0"

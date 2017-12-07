@@ -8,7 +8,7 @@ module.exports = {
   open: false,
   notify: true,
   files: [
-    'test/**/*',
+    'e2e/**/*',
     'dist/**/*.js',
     {
       match: ['lib/**/*.+(html|js)'],
@@ -30,7 +30,7 @@ module.exports = {
     }
   ],
   server: {
-    baseDir: 'test/fixtures',
+    baseDir: 'e2e/fixtures',
     routes: {
       '/scripts': `${__dirname}/dist`
     }

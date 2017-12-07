@@ -10,7 +10,7 @@ Sidebar not dependent on others.
 
 ```bash
 yarn add apoc-sidebar
-npm i -S apoc-sidebar
+npm i apoc-sidebar
 ```
 
 Or access to [releases page](https://github.com/nju33/apoc-sidebar/releases).
@@ -29,8 +29,8 @@ Then, download the latest version.
 <div data-apoc-sidebar-sibling></div>
 
 <!--
-  Please specify `width` in CSS.
-  Also, adding `display:none` does not show useless parts when displaying the page.
+  Specify `width` in CSS.
+  Also, can hide the first state by adding `display:none` to the style
 -->
 <div id="sidebar" style="width:300px;display:none">...</div>
 
@@ -57,6 +57,10 @@ const sidebar = new ApocSidebar(
     // - 'waterfall',
     // - 'waterfallReverse'
 
+    // Parent surrounding `#sidebar` and `[data-apoc-sidebar-sibling]`
+    // default
+    container: sidebar.parentElement // the parentElement of the `#sidebar`
+
 
     // Which side you put on
     // default
@@ -80,6 +84,9 @@ const sidebar = new ApocSidebar(
 );
 
 sidebar.init();
+// You can also decide "Open first or close" like `sidebar.init(true)`.
+
+
 document.getElementById('trigger').addEventListener('click', () => {
   if (sidebar.isOpen()) {
     sidebar.close();

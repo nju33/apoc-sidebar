@@ -10,5 +10,14 @@
     "external-helpers",
     "transform-object-rest-spread",
     "transform-class-properties"
-  ]
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        ["env", {
+          "browsers": ["> 3%", "last 2 versions"]
+        }]
+      ]
+    }
+  }
 }

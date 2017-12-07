@@ -33,6 +33,8 @@ var _aFunction = function(it){
   return it;
 };
 
+// optional / simple context binding
+
 var _ctx = function(fn, that, length){
   _aFunction(fn);
   if(that === undefined)return fn;
@@ -69,6 +71,7 @@ var _fails = function(exec){
   }
 };
 
+// Thank's IE8 for his funny defineProperty
 var _descriptors = !_fails(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
@@ -83,6 +86,10 @@ var _ie8DomDefine = !_descriptors && !_fails(function(){
   return Object.defineProperty(_domCreate('div'), 'a', {get: function(){ return 7; }}).a != 7;
 });
 
+// 7.1.1 ToPrimitive(input [, PreferredType])
+
+// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+// and the second argument - flag - preferred type is a string
 var _toPrimitive = function(it, S){
   if(!_isObject(it))return it;
   var fn, val;
@@ -184,6 +191,7 @@ $export.U = 64;  // safe
 $export.R = 128; // real proto method for `library` 
 var _export = $export;
 
+// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
 _export(_export.S + _export.F * !_descriptors, 'Object', {defineProperty: _objectDp.f});
 
 var $Object = _core.Object;
@@ -235,6 +243,8 @@ var _cof = function(it){
   return toString.call(it).slice(8, -1);
 };
 
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
+
 var _iobject = Object('z').propertyIsEnumerable(0) ? Object : function(it){
   return _cof(it) == 'String' ? it.split('') : Object(it);
 };
@@ -244,6 +254,8 @@ var _defined = function(it){
   if(it == undefined)throw TypeError("Can't call method on  " + it);
   return it;
 };
+
+// to indexed object, toObject with fallback for non-array-like ES3 strings
 
 var _toIobject = function(it){
   return _iobject(_defined(it));
@@ -256,6 +268,7 @@ var _toInteger = function(it){
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
 
+// 7.1.15 ToLength
 var min       = Math.min;
 var _toLength = function(it){
   return it > 0 ? min(_toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
@@ -267,6 +280,9 @@ var _toIndex = function(index, length){
   index = _toInteger(index);
   return index < 0 ? max(index + length, 0) : min$1(index, length);
 };
+
+// false -> Array#indexOf
+// true  -> Array#includes
 
 var _arrayIncludes = function(IS_INCLUDES){
   return function($this, el, fromIndex){
@@ -323,6 +339,9 @@ var _enumBugKeys = (
   'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
 ).split(',');
 
+// 19.1.2.14 / 15.2.3.14 Object.keys(O)
+
+
 var _objectKeys = Object.keys || function keys(O){
   return _objectKeysInternal(O, _enumBugKeys);
 };
@@ -339,10 +358,13 @@ var _objectPie = {
 	f: f$2
 };
 
+// 7.1.13 ToObject(argument)
+
 var _toObject = function(it){
   return Object(_defined(it));
 };
 
+// 19.1.2.1 Object.assign(target, source, ...)
 var $assign  = Object.assign;
 
 // should work with symbols and should have deterministic property order (V8 bug)
@@ -369,6 +391,9 @@ var _objectAssign = !$assign || _fails(function(){
     while(length > j)if(isEnum.call(S, key = keys[j++]))T[key] = S[key];
   } return T;
 } : $assign;
+
+// 19.1.3.1 Object.assign(target, source)
+
 
 _export(_export.S + _export.F, 'Object', {assign: _objectAssign});
 
@@ -476,13 +501,18 @@ var ApocSidebar = function () {
     this.wall = null;
     this.el = el;
     this.opts = _Object$assign({}, defaultOpts, opts);
+    if (typeof this.opts.container === 'undefined') {
+      this.opts.container = el.parentElement;
+    }
 
     this.handleTransitionendForWall = this.createTransitionendHandlerForWall.bind(this);
     this.handleTransitionendForSidebar = this.createTransitionendHandlerForSidebar.bind(this);
     this.handleTransitionendForOther = this.createTransitionendHandlerForOther.bind(this);
     this.handleClose = this.close.bind(this);
 
+    this.inited = false;
     this.opened = false;
+    this.defaultStyle = {};
   }
 
   _createClass(ApocSidebar, [{
@@ -506,13 +536,23 @@ var ApocSidebar = function () {
   }, {
     key: 'createTransitionendHandlerForSidebar',
     value: function createTransitionendHandlerForSidebar() {
-      _Object$assign(this.el.style, {
-        webkitBackfaceVisibility: '',
-        backfaceVisibility: '',
-        willChange: '',
-        borderRadius: 0,
-        zIndex: 9999
-      });
+      if (!this.isOpen()) {
+        _Object$assign(this.el.style, {
+          webkitBackfaceVisibility: '',
+          backfaceVisibility: '',
+          willChange: '',
+          borderRadius: 0,
+          zIndex: -9999
+        });
+      } else {
+        _Object$assign(this.el.style, {
+          webkitBackfaceVisibility: '',
+          backfaceVisibility: '',
+          willChange: '',
+          borderRadius: 0,
+          zIndex: 9999
+        });
+      }
     }
   }, {
     key: 'createWall',
@@ -528,18 +568,27 @@ var ApocSidebar = function () {
         opacity: 0,
         zIndex: -9998
       }, this.transitionDecls));
+      this.wall.className = 'apoc-sidebar-wall';
       document.body.appendChild(this.wall);
       this.wall.addEventListener('click', this.handleClose);
       this.wall.addEventListener('transitionend', this.handleTransitionendForWall);
     }
   }, {
     key: 'init',
-    value: function init() {
+    value: function init(isOpen) {
       var _this = this;
 
-      var isOpen = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      if (typeof isOpen === 'undefined') {
+        isOpen = this.el.style.display !== 'none';
+      }
 
+      if (this.inited) {
+        return;
+      }
+
+      this.inited = true;
       this.createWall();
+      this.defaultStyle = _Object$assign({}, this.el.style);
 
       if (this.opts.type === 'push') {
         _Object$assign(document.body.style, {
@@ -574,7 +623,6 @@ var ApocSidebar = function () {
       _Object$assign.apply(null, styles);
 
       if (isOpen) {
-        this.opened = true;
         this.open();
       }
 
@@ -620,6 +668,12 @@ var ApocSidebar = function () {
     value: function open() {
       var _this2 = this;
 
+      if (this.opened) {
+        return;
+      }
+
+      this.opened = true;
+
       _Object$assign(this.wall.style, {
         webkitBackfaceVisibility: 'hidden',
         backfaceVisibility: 'hidden',
@@ -637,18 +691,26 @@ var ApocSidebar = function () {
       }
 
       _Object$assign(this.el.style, _extends$1({
+        width: this.defaultStyle.width,
         webkitBackfaceVisibility: 'hidden',
         backfaceVisibility: 'hidden',
         willChange: 'transform, border-radius'
 
-      }, this.isSlideType() ? this.preslide : {}, this.isWaterType() ? this.prewater : {}, this.isDoorType() ? this.predoor : {}, this.isWaterfallType() ? this.prewaterfall : {}, this.isWaterfallReverseType() ? this.prewaterfallReverse : {}));
+      }, this.isSlideType() ? this.preslide : {}, this.isWaterType() ? this.prewater : {}, this.isDoorType() ? this.predoor : {}, this.isWaterfallType() ? this.prewaterfall : {}, this.isWaterfallReverseType() ? this.prewaterfallReverse : {}, {
 
-      this.opened = true;
+        zIndex: 9999
+      }));
     }
   }, {
     key: 'close',
     value: function close() {
       var _this3 = this;
+
+      if (!this.opened) {
+        return;
+      }
+
+      this.opened = false;
 
       _Object$assign(this.wall.style, {
         webkitBackfaceVisibility: 'hidden',
@@ -685,6 +747,12 @@ var ApocSidebar = function () {
         this.close();
       }
 
+      if (!this.inited) {
+        return;
+      }
+
+      this.inited = false;
+
       if (this.opts.type === 'push') {
         document.body.removeEventListener('transitionend', this.handleTransitionendForOther);
       } else if (this.opts.type === 'lid') {
@@ -695,6 +763,9 @@ var ApocSidebar = function () {
 
       this.el.removeEventListener('transitionend', this.handleTransitionendForWall);
       this.el.removeEventListener('transitionend', this.handleTransitionendForSidebar);
+
+      document.body.removeChild(this.wall);
+      this.el.style = this.defaultStyle;
     }
   }, {
     key: 'width',
@@ -744,7 +815,7 @@ var ApocSidebar = function () {
       return {
         webkitTransform: 'translate3d(' + size + ', 0, 0)',
         transform: 'translate3d(' + size + ', 0, 0)',
-        zIndex: 9999
+        zIndex: 9997
       };
     }
   }, {
@@ -830,7 +901,7 @@ var ApocSidebar = function () {
   }, {
     key: 'siblings',
     get: function get() {
-      var siblings = Array.prototype.slice.call(this.el.parentElement.children).filter(function (el) {
+      var siblings = Array.prototype.slice.call(this.opts.container.children).filter(function (el) {
         return el.getAttribute('data-apoc-sidebar-sibling') !== null;
       });
       if (siblings.length === 0) {
