@@ -50,6 +50,7 @@
     "jsdom": "^11.5.1",
     "postcss-easings": "^1.0.1",
     "postcss-modules": "^1.1.0",
+    "puppeteer": "^0.13.0",
     "regenerator-runtime": "^0.11.0",
     "rollup": "^0.52.1",
     "rollup-plugin-babel": "^3.0.2",
@@ -64,8 +65,5 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     }
-  },
-  "dependencies": {
-    "puppeteer": "^0.13.0"
   }
 }
